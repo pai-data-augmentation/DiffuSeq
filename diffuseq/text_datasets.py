@@ -195,8 +195,8 @@ class TextDataset(Dataset):
             arr = np.array(hidden_state, dtype=np.float32)
 
             out_kwargs = {}
-            out_kwargs['input_ids'] = np.array(self.text_datasets['train'][idx]['input_ids'])
-            out_kwargs['input_mask'] = np.array(self.text_datasets['train'][idx]['input_mask'])
+            out_kwargs['input_ids'] = np.array(self.text_datasets['train'][idx]['input_ids'], dtype=np.int64)
+            out_kwargs['input_mask'] = np.array(self.text_datasets['train'][idx]['input_mask'], dtype=np.int64)
 
             return arr, out_kwargs
 

@@ -81,7 +81,8 @@ def load_model_emb(args, tokenizer):
             print('initializing the random embeddings', model)
             torch.nn.init.normal_(model.weight)
             torch.save(model.state_dict(), path_save)
-            os.sync()
+            if sys.platform != "win32":
+                os.fsync()
             with open(path_save_ind, "x") as _:
                 pass
     else:

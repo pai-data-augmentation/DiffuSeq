@@ -50,7 +50,7 @@ if __name__ == '__main__':
                 f"_t{args.diff_steps}_{args.noise_schedule}_{args.schedule_sampler}" \
                 f"_seed{args.seed}"
     if args.notes:
-        args.notes += time.strftime("%Y%m%d-%H:%M:%S")
+        args.notes += time.strftime("%Y%m%d-%H%M%S")
         Model_FILE = Model_FILE + f'_{args.notes}'
     Model_FILE = os.path.join(folder_name, Model_FILE)
 
@@ -58,7 +58,7 @@ if __name__ == '__main__':
         if not os.path.isdir(Model_FILE):
             os.mkdir(Model_FILE)
 
-    COMMANDLINE = f" OPENAI_LOGDIR={Model_FILE}  " \
+    NON_WIN32_COMMANDLINE = f" OPENAI_LOGDIR={Model_FILE}  " \
                   f"TOKENIZERS_PARALLELISM=false " \
                   f"python train.py   " \
                   f"--checkpoint_path {Model_FILE} " \
@@ -72,6 +72,26 @@ if __name__ == '__main__':
                   f"--hidden_dim {args.hidden_dim} " \
                   f"--learning_steps {args.learning_steps} --save_interval {args.save_interval} " \
                   f"--config_name {args.config_name} --notes {args.notes}"
+
+    WIN32_COMMANDLINE = f"set OPENAI_LOGDIR={Model_FILE}" \
+                  f"& set TOKENIZERS_PARALLELISM=false" \
+                  f"& python train.py   " \
+                  f"--checkpoint_path {Model_FILE} " \
+                  f"--dataset {args.dataset} --data_dir {args.data_dir} --vocab {args.vocab} --use_plm_init {args.use_plm_init} " \
+                  f"--lr {args.lr} " \
+                  f"--batch_size {args.bsz} --microbatch {args.microbatch} " \
+                  f"--diffusion_steps {args.diff_steps} " \
+                  f"--noise_schedule {args.noise_schedule} " \
+                  f"--schedule_sampler {args.schedule_sampler} --resume_checkpoint {args.resume_checkpoint} " \
+                  f"--seq_len {args.seq_len} --hidden_t_dim {args.hidden_t_dim} --seed {args.seed} " \
+                  f"--hidden_dim {args.hidden_dim} " \
+                  f"--learning_steps {args.learning_steps} --save_interval {args.save_interval} " \
+                  f"--config_name {args.config_name} --notes {args.notes}"
+
+    if sys.platform == "win32":
+        COMMANDLINE = WIN32_COMMANDLINE
+    else:
+        COMMANDLINE = NON_WIN32_COMMANDLINE
 
     COMMANDLINE += " " + args.app
 
