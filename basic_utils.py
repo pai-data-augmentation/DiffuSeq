@@ -82,7 +82,7 @@ def load_model_emb(args, tokenizer):
             torch.nn.init.normal_(model.weight)
             torch.save(model.state_dict(), path_save)
             if sys.platform != "win32":
-                os.fsync()
+                os.sync()
             with open(path_save_ind, "x") as _:
                 pass
     else:
